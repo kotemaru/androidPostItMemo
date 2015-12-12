@@ -1,5 +1,6 @@
 package org.kotemaru.android.postit.util;
 
+import org.kotemaru.android.postit.AlarmListActivity;
 import org.kotemaru.android.postit.PostItSettingActivity;
 import org.kotemaru.android.postit.data.PostItData;
 
@@ -12,7 +13,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.service.wallpaper.WallpaperService;
-
 
 /**
  * 各種 Intent 発行ユーティリティ
@@ -36,7 +36,13 @@ public class Launcher {
 		intent.putExtra(POST_IT_ID, postItData.getId());
 		context.startActivity(intent);
 	}
-	
+
+	public static void startAlarmListActivity(Context context) {
+		Intent intent = new Intent(context, AlarmListActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(intent);
+	}
+
 	/**
 	 * 画像選択の開始。
 	 * @param context
@@ -51,7 +57,7 @@ public class Launcher {
 			context.startActivityForResult(intent, code);
 		} else {
 			Intent intent = new Intent(Intent.ACTION_PICK);
-			//intent.setAction(Intent.ACTION_GET_CONTENT);
+			// intent.setAction(Intent.ACTION_GET_CONTENT);
 			intent.setType("image/*");
 			context.startActivityForResult(intent, code);
 		}
@@ -75,7 +81,7 @@ public class Launcher {
 		}
 		return uri;
 	}
-	
+
 	/**
 	 * Live壁紙に設定の変更を通知。
 	 * @param context
@@ -92,7 +98,7 @@ public class Launcher {
 		Intent intent = new Intent(ACTION_CHANGE_DATA);
 		context.startService(intent);
 	}
-	
+
 	/**
 	 * ライブ壁紙を設定。
 	 * <li>API-15以前は選択画面を表示。

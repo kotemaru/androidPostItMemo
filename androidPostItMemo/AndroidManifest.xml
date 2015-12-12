@@ -1,48 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.kotemaru.android.postit" android:versionCode="7"
-	android:versionName="1.0.6">
+<manifest
+    package="org.kotemaru.android.postit"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="8"
+    android:versionName="1.1.0">
 
-	<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19" />
-	<uses-permission android:name="android.permission.SET_WALLPAPER" />
-	<uses-permission android:name="android.permission.SET_WALLPAPER_HINT" />
-	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19"/>
 
-	<application android:allowBackup="true" android:icon="@drawable/icon_wall"
-		android:label="@string/app_name">
-		<activity android:name=".SettingActivity"
-			android:configChanges="orientation|keyboardHidden" android:label="@string/app_name"
-			android:screenOrientation="behind">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINT"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".PostItSettingActivity"
-			android:configChanges="orientation|keyboardHidden" android:label="@string/edit_memo"
-			android:screenOrientation="behind">
-		</activity>
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon_wall"
+        android:label="@string/app_name">
+        <activity
+            android:name=".SettingActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="behind">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-		<provider android:name="org.kotemaru.android.postit.data.PostItDataProvider"
-			android:authorities="org.kotemaru.android.postit.data.postitdataprovider"
-			android:exported="true" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
-		<service android:name=".PostItWallpaper" android:label="PostItWallpaper"
-			android:permission="android.permission.BIND_WALLPAPER">
-			<intent-filter>
-				<action android:name="android.service.wallpaper.WallpaperService" />
-				<action
-					android:name="org.kotemaru.android.postit.ACTION_CHANGE_SETTENGS" />
-				<action
-					android:name="org.kotemaru.android.postit.ACTION_CHANGE_DATA" />
-			</intent-filter>
+        <activity
+            android:name=".PostItSettingActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/edit_memo"
+            android:screenOrientation="behind">
+        </activity>
 
-			<meta-data android:name="android.service.wallpaper"
-				android:resource="@xml/wallpaper" />
-		</service>
-	</application>
+        <activity
+            android:name=".AlarmListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/alarm_list"
+            android:screenOrientation="behind">
+        </activity>
+
+        <provider
+            android:name="org.kotemaru.android.postit.data.PostItDataProvider"
+            android:authorities="org.kotemaru.android.postit.data.postitdataprovider"
+            android:exported="true"/>
+
+        <receiver
+            android:name=".AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <action android:name="org.kotemaru.android.postit.ACTION_CHANGE_SETTENGS"/>
+                <action android:name="org.kotemaru.android.postit.ACTION_CHANGE_DATA"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".PostItWallpaper"
+            android:label="PostItWallpaper"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService"/>
+                <action android:name="org.kotemaru.android.postit.ACTION_CHANGE_SETTENGS"/>
+                <action android:name="org.kotemaru.android.postit.ACTION_CHANGE_DATA"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/wallpaper"/>
+        </service>
+    </application>
 
 </manifest>

@@ -41,6 +41,7 @@ public class PostItTray {
 	private View mTrayLayout;
 	private ImageView mLayerBtn;
 	private ImageView mTrash;
+	private ImageView mAlarm;
 	private Animation mFadeOutAnim;
 	private Animation mFadeInAnim;
 
@@ -81,6 +82,15 @@ public class PostItTray {
 		setupNewPostItDragStartListener(R.id.post_it_green, PostItColor.GREEN);
 		setupNewPostItDragStartListener(R.id.post_it_yellow, PostItColor.YELLOW);
 		setupNewPostItDragStartListener(R.id.post_it_pink, PostItColor.PINK);
+
+		mAlarm = (ImageView) mFullScreenFrame.findViewById(R.id.alarm);
+		mAlarm.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Launcher.startAlarmListActivity(mPostItWallpaper);
+				hide();
+			}
+		});
 
 		mLayerBtn = (ImageView) mFullScreenFrame.findViewById(R.id.layer);
 		mLayerBtn.setOnClickListener(new OnClickListener() {
@@ -126,7 +136,7 @@ public class PostItTray {
 			mColor = Integer.toString(color);
 		}
 
-		@SuppressLint("ClickableViewAccessibility") // Overlay layer event handling.
+		@SuppressLint("ClickableViewAccessibility")    // Overlay layer event handling.
 		@Override
 		public boolean onTouch(View view, MotionEvent ev) {
 			int action = ev.getAction();
@@ -173,6 +183,15 @@ public class PostItTray {
 	public Point getTrashPoint() {
 		int x = mTrash.getLeft() + mTrash.getWidth() / 2;
 		int y = mTrash.getTop() + mTrash.getHeight() / 2;
+		return new Point(x, y);
+	}
+
+	/**
+	 * @return アラームの中心座業を返す。
+	 */
+	public Point getAlarmPoint() {
+		int x = mAlarm.getLeft() + mAlarm.getWidth() / 2;
+		int y = mAlarm.getTop() + mAlarm.getHeight() / 2;
 		return new Point(x, y);
 	}
 

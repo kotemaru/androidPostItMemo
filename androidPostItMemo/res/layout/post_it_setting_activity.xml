@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="8dp"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="8dp"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/memo" />
+        android:text="@string/memo"/>
 
     <EditText
         android:id="@+id/memo"
@@ -17,16 +17,16 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:textSize="14sp" >
+        android:textSize="14sp">
 
-        <requestFocus />
+        <requestFocus/>
     </EditText>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/base_margin"
-        android:text="@string/shape" />
+        android:text="@string/shape"/>
 
     <org.kotemaru.android.postit.widget.RadioLayout
         android:id="@+id/shape_radio_group"
@@ -34,21 +34,21 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/base_margin"
         android:orientation="horizontal"
-        android:padding="@dimen/base_margin" >
+        android:padding="@dimen/base_margin">
 
         <org.kotemaru.android.postit.widget.RadioItem
             android:id="@+id/shape_shot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="20dp"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_blue" />
+                android:src="@drawable/post_it_blue"/>
         </org.kotemaru.android.postit.widget.RadioItem>
 
         <org.kotemaru.android.postit.widget.RadioItem
@@ -56,14 +56,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="20dp"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_blue" />
+                android:src="@drawable/post_it_blue"/>
         </org.kotemaru.android.postit.widget.RadioItem>
 
         <org.kotemaru.android.postit.widget.RadioItem
@@ -71,14 +71,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_blue" />
+                android:src="@drawable/post_it_blue"/>
         </org.kotemaru.android.postit.widget.RadioItem>
     </org.kotemaru.android.postit.widget.RadioLayout>
 
@@ -86,48 +86,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/base_margin"
-        android:text="@string/font" />
+        android:text="@string/font"/>
 
     <RadioGroup
         android:id="@+id/font_radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/font_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/font_small"
-            android:textSize="@dimen/font_radio_sp" />
+            android:textSize="@dimen/font_radio_sp"/>
 
         <RadioButton
             android:id="@+id/font_middle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/font_middle"
-            android:textSize="@dimen/font_radio_sp" />
+            android:textSize="@dimen/font_radio_sp"/>
 
         <RadioButton
             android:id="@+id/font_lage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/font_lage"
-            android:textSize="@dimen/font_radio_sp" />
+            android:textSize="@dimen/font_radio_sp"/>
 
         <RadioButton
             android:id="@+id/font_huge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/font_huge"
-            android:textSize="@dimen/font_radio_sp" />
+            android:textSize="@dimen/font_radio_sp"/>
     </RadioGroup>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/base_margin"
-        android:text="@string/color" />
+        android:text="@string/color"/>
 
     <org.kotemaru.android.postit.widget.RadioLayout
         android:id="@+id/color_radio_group"
@@ -135,21 +135,21 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/base_margin"
         android:orientation="horizontal"
-        android:padding="@dimen/base_margin" >
+        android:padding="@dimen/base_margin">
 
         <org.kotemaru.android.postit.widget.RadioItem
             android:id="@+id/color_blue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_blue" />
+                android:src="@drawable/post_it_blue"/>
         </org.kotemaru.android.postit.widget.RadioItem>
 
         <org.kotemaru.android.postit.widget.RadioItem
@@ -157,14 +157,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_green" />
+                android:src="@drawable/post_it_green"/>
         </org.kotemaru.android.postit.widget.RadioItem>
 
         <org.kotemaru.android.postit.widget.RadioItem
@@ -172,14 +172,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_yellow" />
+                android:src="@drawable/post_it_yellow"/>
         </org.kotemaru.android.postit.widget.RadioItem>
 
         <org.kotemaru.android.postit.widget.RadioItem
@@ -187,14 +187,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_pink" />
+                android:src="@drawable/post_it_pink"/>
         </org.kotemaru.android.postit.widget.RadioItem>
 
         <org.kotemaru.android.postit.widget.RadioItem
@@ -202,15 +202,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/radio_selector"
-            android:padding="@dimen/base_margin" >
+            android:padding="@dimen/base_margin">
 
             <ImageView
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/post_it_red" />
+                android:src="@drawable/post_it_red"/>
         </org.kotemaru.android.postit.widget.RadioItem>
     </org.kotemaru.android.postit.widget.RadioLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_margin"
+        android:text="@string/timer"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_margin"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:clickable="true"
+            android:onClick="onClickTimerSetting"
+            android:src="@drawable/ic_clock_white"/>
+
+        <TextView
+            android:id="@+id/timer_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:onClick="onClickTimerSetting"
+            android:text="@string/timer_no_setting"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

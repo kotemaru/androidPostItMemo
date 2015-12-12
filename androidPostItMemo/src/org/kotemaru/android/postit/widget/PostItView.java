@@ -1,11 +1,13 @@
 package org.kotemaru.android.postit.widget;
 
+import org.kotemaru.android.postit.AlarmReceiver;
 import org.kotemaru.android.postit.PostItConst.PostItColor;
 import org.kotemaru.android.postit.PostItViewManager;
 import org.kotemaru.android.postit.PostItWallpaper;
 import org.kotemaru.android.postit.R;
 import org.kotemaru.android.postit.data.PostItData;
 import org.kotemaru.android.postit.data.PostItDataProvider;
+import org.kotemaru.android.postit.data.TimerPattern;
 import org.kotemaru.android.postit.util.AnimFactory;
 import org.kotemaru.android.postit.util.AnimFactory.AnimEndListener;
 import org.kotemaru.android.postit.util.IntIntMap;
@@ -24,7 +26,6 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-
 /**
  * 付箋用のカスタムView。
  * <li>WindowManagerの子となる。
@@ -33,9 +34,9 @@ import android.widget.TextView;
  */
 
 public class PostItView extends FrameLayout {
-	
+
 	/** 付箋の色と対応する画像リソースのマップ */
-	private static final IntIntMap sColorResourceMap = new IntIntMap(new int[][] {
+	public static final IntIntMap sColorResourceMap = new IntIntMap(new int[][] {
 			{ R.drawable.post_it_blue, PostItColor.BLUE, },
 			{ R.drawable.post_it_green, PostItColor.GREEN, },
 			{ R.drawable.post_it_yellow, PostItColor.YELLOW, },
@@ -43,7 +44,6 @@ public class PostItView extends FrameLayout {
 			{ R.drawable.post_it_red, PostItColor.RED, },
 	});
 
-	
 	private PostItViewManager mManager;
 	private PostItData mPostItData;
 	private TextView mMemo;
@@ -98,7 +98,11 @@ public class PostItView extends FrameLayout {
 	 */
 	private void setBackground(boolean isOnTrash) {
 		if (isOnTrash) {
-			mMemo.setBackgroundResource(R.drawable.post_it_remove);
+			if (mPostItData.getTimerPattern() == null) {
+				mMemo.setBackgroundResource(R.drawable.post_it_remove);
+			} else {
+				mMemo.setBackgroundResource(R.drawable.post_it_recycle);
+			}
 		} else {
 			mMemo.setBackgroundResource(sColorResourceMap.getFirst(mPostItData.getColor()));
 		}
@@ -113,6 +117,7 @@ public class PostItView extends FrameLayout {
 	 */
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 		private PostItView self = PostItView.this;
+		private int ox, oy;
 		private int rx, ry;
 		private long touchDownTime = -1;
 
@@ -127,6 +132,8 @@ public class PostItView extends FrameLayout {
 				postItTray.show();
 				rx = (int) ev.getX();
 				ry = (int) ev.getY();
+				ox = mPostItData.getPosX();
+				oy = mPostItData.getPosY();
 				touchDownTime = System.currentTimeMillis();
 			} else if (action == MotionEvent.ACTION_MOVE) {
 				self.onDrag(ev, rx, ry);
@@ -135,7 +142,7 @@ public class PostItView extends FrameLayout {
 				if (isClick) {
 					self.onClick(ev, rx, ry);
 				} else {
-					self.onDrop(ev, rx, ry);
+					self.onDrop(ev, rx, ry, ox, oy);
 				}
 			}
 			return false;
@@ -163,22 +170,19 @@ public class PostItView extends FrameLayout {
 	 * @param ry
 	 */
 	private void onDrag(MotionEvent ev, int rx, int ry) {
-		//Log.d("DEBUG","==>"+ev.getY()+":"+ev.getRawY()+":"+ev.getAxisValue(MotionEvent.AXIS_RY));
+		// Log.d("DEBUG","==>"+ev.getY()+":"+ev.getRawY()+":"+ev.getAxisValue(MotionEvent.AXIS_RY));
 		PostItWallpaper postItWallpaper = mManager.getPostItWallpaper();
 		PostItTray postItTray = postItWallpaper.getPostItTray();
 		setAlpha(0.7F);
-		WindowManager.LayoutParams params = (WindowManager.LayoutParams) getLayoutParams();
-		//params.x += (int) ev.getX() - rx;
-		//params.y += (int) ev.getY() - ry;
-		params.x = (int) ev.getRawX() - rx;
-		params.y = (int) ev.getRawY() - (ry + postItWallpaper.getStatusBarHeight()); // TODO: 暫定対応
-		mManager.getWindowManager().updateViewLayout(this, params);
-		mPostItData.setPosX(params.x);
-		mPostItData.setPosY(params.y);
-		boolean isOnTrash = postItTray.noticeDrag(this, params.x + rx, params.y + ry);
+		int x = (int) ev.getRawX() - rx;
+		int y = (int) ev.getRawY() - (ry + postItWallpaper.getStatusBarHeight()); // TODO: 暫定対応
+		move(x, y);
+		mPostItData.setPosX(x);
+		mPostItData.setPosY(y);
+		boolean isOnTrash = postItTray.noticeDrag(this, x + rx, y + ry);
 		setBackground(isOnTrash);
 	}
-	
+
 	/**
 	 * ドロップ処理。
 	 * <li>ゴミ箱かどうかで処理の振り分け。
@@ -186,13 +190,13 @@ public class PostItView extends FrameLayout {
 	 * @param rx
 	 * @param ry
 	 */
-	private void onDrop(MotionEvent ev, int rx, int ry) {
+	private void onDrop(MotionEvent ev, int rx, int ry, int ox, int oy) {
 		final PostItWallpaper postItWallpaper = mManager.getPostItWallpaper();
 		final PostItTray postItTray = postItWallpaper.getPostItTray();
 		WindowManager.LayoutParams params = (WindowManager.LayoutParams) getLayoutParams();
 		boolean isOnTrash = postItTray.noticeDrop(this, params.x + rx, params.y + ry);
 		if (isOnTrash) {
-			doTrash(params);
+			doTrash(params, ox, oy);
 		} else {
 			doMove(params);
 		}
@@ -201,14 +205,28 @@ public class PostItView extends FrameLayout {
 	/**
 	 * ゴミ箱行き処理。
 	 * <li>データ削除してゴミ箱に吸い込まれるアニメーション開始。
+	 * <li>タイマー設定がある場合は非表示にして次のタイマー設定。</li>
 	 * @param params
 	 */
-	private void doTrash(WindowManager.LayoutParams params) {
+	private void doTrash(WindowManager.LayoutParams params, int ox, int oy) {
 		final PostItWallpaper postItWallpaper = mManager.getPostItWallpaper();
 		final PostItTray postItTray = postItWallpaper.getPostItTray();
 
-		PostItDataProvider.removePostItData(postItWallpaper, mPostItData);
-		Point trashPoint = postItTray.getTrashPoint();
+		Point trashPoint;
+		if (mPostItData.getTimerPattern() != null) {
+			TimerPattern timerPattern = TimerPattern.create(mPostItData.getTimerPattern());
+			mPostItData.setEnabled(false);
+			mPostItData.setTimer(timerPattern.getNextDate().getTimeInMillis());
+			mPostItData.setPosX(ox);
+			mPostItData.setPosY(oy);
+			PostItDataProvider.updatePostItData(postItWallpaper, mPostItData);
+			trashPoint = postItTray.getAlarmPoint();
+			move(trashPoint.x - getWidth() / 2, trashPoint.y - getHeight() / 2);
+		} else {
+			PostItDataProvider.removePostItData(postItWallpaper, mPostItData);
+			trashPoint = postItTray.getTrashPoint();
+		}
+
 		float pivotX = (float) (trashPoint.x - params.x);
 		float pivotY = (float) (trashPoint.y - params.y);
 		Animation removeAnim = AnimFactory.getRemove(postItWallpaper, pivotX, pivotY, new AnimEndListener() {
@@ -240,6 +258,13 @@ public class PostItView extends FrameLayout {
 		PostItDataProvider.updatePostItData(postItWallpaper, mPostItData);
 		postItTray.hide();
 		postItWallpaper.update();
+	}
+
+	public void move(int x, int y) {
+		WindowManager.LayoutParams params = (WindowManager.LayoutParams) getLayoutParams();
+		params.x = x;
+		params.y = y;
+		mManager.getWindowManager().updateViewLayout(this, params);
 	}
 
 }

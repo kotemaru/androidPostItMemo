@@ -14,7 +14,6 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.WindowManager;
 
-
 /**
  * 雑多なユーティリティ。
  * @author kotemaru.org
@@ -22,7 +21,6 @@ import android.view.WindowManager;
 public class Util {
 	private static final String TAG = Util.class.getSimpleName();
 
-	
 	/**
 	 * システムのステータスバーの高さを得る。
 	 * @param context
@@ -91,7 +89,7 @@ public class Util {
 			if (in != null) in.close();
 		}
 	}
-	
+
 	/**
 	 * URIから画像を得る。サイズの調整も行う。
 	 * <li>要求サイズ丁度では無い。画像の劣化が起こらない最小サイズ。
@@ -142,7 +140,6 @@ public class Util {
 		params.gravity = Gravity.TOP | Gravity.START;
 		return params;
 	}
-	
 
 	public static int sp2px(Context context, int sp) {
 		final float scale = context.getResources().getDisplayMetrics().scaledDensity;

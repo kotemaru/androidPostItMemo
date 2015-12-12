@@ -30,7 +30,7 @@ import android.widget.Button;
  */
 public class SettingActivity extends Activity {
 	public static final String TAG = SettingActivity.class.getSimpleName();
-	
+
 	private Settings mSettings;
 	private WallpaperManager mWallpaperManager;
 	private Button mChoosePictueDay;
@@ -100,7 +100,7 @@ public class SettingActivity extends Activity {
 	 */
 	private boolean hasPostItWallpaper() {
 		WallpaperInfo winfo = mWallpaperManager.getWallpaperInfo();
-		Log.i(TAG,"Current wallpaper="+winfo);
+		Log.i(TAG, "Current wallpaper=" + winfo);
 		if (winfo == null) return false;
 		return PostItWallpaper.class.getCanonicalName().equals(winfo.getServiceName());
 	}

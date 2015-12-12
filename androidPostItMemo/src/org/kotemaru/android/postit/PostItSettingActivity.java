@@ -3,8 +3,10 @@ package org.kotemaru.android.postit;
 import org.kotemaru.android.postit.PostItConst.PostItColor;
 import org.kotemaru.android.postit.PostItConst.PostItFontSize;
 import org.kotemaru.android.postit.PostItConst.PostItShape;
+import org.kotemaru.android.postit.data.TimerPattern;
 import org.kotemaru.android.postit.data.PostItData;
 import org.kotemaru.android.postit.data.PostItDataProvider;
+import org.kotemaru.android.postit.dialog.DatetimePickerDialogFragment;
 import org.kotemaru.android.postit.util.IntIntMap;
 import org.kotemaru.android.postit.util.Launcher;
 import org.kotemaru.android.postit.widget.RadioLayout;
@@ -12,16 +14,23 @@ import org.kotemaru.android.postit.widget.RadioLayout;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 /**
  * 付箋データの編集画面。
  * <li>メモ、形状、フォントサイズ、色の編集。
  * <li>Activityを終了すると自動的にデータを保存する。キャンセルはできない。
+ *
  * @author kotemaru.org
  */
-public class PostItSettingActivity extends Activity {
+public class PostItSettingActivity extends Activity
+		implements DatetimePickerDialogFragment.Callback {
+	private static final String TAG = PostItSettingActivity.class.getSimpleName();
+
 	/** ラジオボタンと色コードのマップ。 */
 	private static final IntIntMap sColorRadioMap = new IntIntMap(new int[][] {
 			{ R.id.color_blue, PostItColor.BLUE, },
@@ -49,6 +58,9 @@ public class PostItSettingActivity extends Activity {
 	private RadioLayout mShapeRadioGroup;
 	private RadioGroup mFontRadioGroup;
 	private RadioLayout mColorRadioGroup;
+	private TextView mTimerSetting;
+
+	private TimerPattern mTimerPattern;
 
 	/**
 	 * intetntパラメータ
@@ -67,6 +79,7 @@ public class PostItSettingActivity extends Activity {
 		mShapeRadioGroup = (RadioLayout) findViewById(R.id.shape_radio_group);
 		mFontRadioGroup = (RadioGroup) findViewById(R.id.font_radio_group);
 		mColorRadioGroup = (RadioLayout) findViewById(R.id.color_radio_group);
+		mTimerSetting = (TextView) findViewById(R.id.timer_setting);
 	}
 
 	/**
@@ -81,6 +94,8 @@ public class PostItSettingActivity extends Activity {
 		mShapeRadioGroup.check(sShapeRadioMap.getFirst(mPostItData.getWidth(), mPostItData.getHeight()));
 		mFontRadioGroup.check(sFontRadioMap.getFirst(mPostItData.getFontSize()));
 		mColorRadioGroup.check(sColorRadioMap.getFirst(mPostItData.getColor()));
+
+		setTimerPattern(TimerPattern.create(mPostItData.getTimerPattern()));
 	}
 
 	/**
@@ -101,11 +116,43 @@ public class PostItSettingActivity extends Activity {
 		int colorResId = mColorRadioGroup.getCheckedRadioButtonId();
 		mPostItData.setColor(sColorRadioMap.getSecond(colorResId));
 
+		if (mTimerPattern.isValid()) {
+			// タイマーの設定。非表示にして発火時刻を設定する。
+			mPostItData.setTimerPattern(mTimerPattern.toFormalString());
+			mPostItData.setTimer(mTimerPattern.getNextDate().getTimeInMillis());
+			mPostItData.setEnabled(false);
+			if (BuildConfig.DEBUG) {
+				Log.d(TAG, "Set timer:" + mTimerPattern.toFormalString() + ":" + mTimerPattern.getNextDate());
+			}
+		} else {
+			mPostItData.setTimerPattern(null);
+			mPostItData.setEnabled(true);
+		}
+
 		// DBに保存
 		PostItDataProvider.updatePostItData(this, mPostItData);
 		Launcher.notifyChangeData(this);
 
+		if (mTimerPattern.isValid()) {
+			AlarmReceiver.setAlarm(this);
+		}
 		super.onPause();
 	}
 
+	public void onClickTimerSetting(View view) {
+		DatetimePickerDialogFragment.show(this, mTimerPattern);
+	}
+
+	@Override
+	public void setTimerPattern(TimerPattern pattern) {
+		mTimerPattern = pattern;
+		if (mTimerPattern.isValid()) {
+			mTimerSetting.setText(mTimerPattern.toLocaleString(this));
+			if (BuildConfig.DEBUG) {
+				Log.d(TAG, "Set timer:" + mTimerPattern.toFormalString() + ":" + mTimerPattern.getNextDate().getTime());
+			}
+		} else {
+			mTimerSetting.setText(R.string.timer_no_setting);
+		}
+	}
 }

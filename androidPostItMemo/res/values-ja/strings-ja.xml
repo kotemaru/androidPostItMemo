@@ -18,14 +18,20 @@
     <string name="dialog_init_cancel">止める</string>
     <!-- post it data settings -->
     <string name="edit_memo">メモ編集</string>
+    <string name="alarm_list">タイマー管理</string>
     <string name="memo">メモ:</string>
     <string name="shape">形状:</string>
     <string name="font">フォント:</string>
     <string name="color">カラー:</string>
+    <string name="timer">タイマー:</string>
     <string name="font_small">小</string>
     <string name="font_middle">中</string>
     <string name="font_lage">大</string>
     <string name="font_huge">特大</string>
-    
-
+    <string name="timer_no_setting">未設定</string>
+    <!-- dialog -->
+    <string name="dialog_timer_title">タイマー</string>
+    <string name="dialog_timer_error">日付設定が無効です。\n日付が特定できません。\n日または曜日を指定して下さい。</string>
+    <!-- timer pattern -->
+    <string name="array_of_week">*,日,月,火,水,木,金,土</string>
 </resources>

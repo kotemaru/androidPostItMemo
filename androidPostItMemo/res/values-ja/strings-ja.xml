@@ -34,4 +34,6 @@
     <string name="dialog_timer_error">日付設定が無効です。\n日付が特定できません。\n日または曜日を指定して下さい。</string>
     <!-- timer pattern -->
     <string name="array_of_week">*,日,月,火,水,木,金,土</string>
+    <!-- menu -->
+    <string name="action_about">about</string>
 </resources>

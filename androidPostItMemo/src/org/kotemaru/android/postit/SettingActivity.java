@@ -17,6 +17,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -146,24 +148,46 @@ public class SettingActivity extends Activity {
 		alertDialogBuilder.setTitle(R.string.dialog_init_title);
 		alertDialogBuilder.setMessage(R.string.dialog_init_msg);
 		alertDialogBuilder.setPositiveButton(R.string.dialog_init_ok,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						Launcher.setupLiveWallpaper(SettingActivity.this, PostItWallpaper.class);
-					}
-				});
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Launcher.setupLiveWallpaper(SettingActivity.this, PostItWallpaper.class);
+                    }
+                });
 		alertDialogBuilder.setNegativeButton(R.string.dialog_init_cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						finish();
-					}
-				});
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
 		alertDialogBuilder.setCancelable(true);
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+             case R.id.action_about:
+                intent = new Intent(this, WebViewActivity.class);
+                intent.setData(Uri.parse("file:///android_asset/about.html"));
+                startActivity(intent);
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

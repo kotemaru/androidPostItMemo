@@ -46,6 +46,13 @@
             android:screenOrientation="behind">
         </activity>
 
+        <activity
+            android:name=".WebViewActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/action_about"
+            android:screenOrientation="behind">
+        </activity>
+
         <provider
             android:name="org.kotemaru.android.postit.data.PostItDataProvider"
             android:authorities="org.kotemaru.android.postit.data.postitdataprovider"

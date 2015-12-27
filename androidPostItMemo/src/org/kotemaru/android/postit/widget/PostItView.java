@@ -98,10 +98,10 @@ public class PostItView extends FrameLayout {
 	 */
 	private void setBackground(boolean isOnTrash) {
 		if (isOnTrash) {
-			if (mPostItData.getTimerPattern() == null) {
-				mMemo.setBackgroundResource(R.drawable.post_it_remove);
-			} else {
+			if (mPostItData.getTimerPattern() != null && mPostItData.isTimerIsRepeat()) {
 				mMemo.setBackgroundResource(R.drawable.post_it_recycle);
+			} else {
+				mMemo.setBackgroundResource(R.drawable.post_it_remove);
 			}
 		} else {
 			mMemo.setBackgroundResource(sColorResourceMap.getFirst(mPostItData.getColor()));
@@ -213,7 +213,7 @@ public class PostItView extends FrameLayout {
 		final PostItTray postItTray = postItWallpaper.getPostItTray();
 
 		Point trashPoint;
-		if (mPostItData.getTimerPattern() != null) {
+		if (mPostItData.getTimerPattern() != null && mPostItData.isTimerIsRepeat()) {
 			TimerPattern timerPattern = TimerPattern.create(mPostItData.getTimerPattern());
 			mPostItData.setEnabled(false);
 			mPostItData.setTimer(timerPattern.getNextDate().getTimeInMillis());

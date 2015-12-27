@@ -33,6 +33,7 @@
     <string name="dialog_timer_title">Timer</string>
     <string name="dialog_timer_error">The date settings is invalid.\n It can not be determined date.\n
 Please specify the day or day-of-week.</string>
+    <string name="dialog_repeatable">Repeatable</string>
     <!-- timer pattern -->
     <string name="array_of_week">***,Sun,Mon,Tue,Wed,Thu,Fri,Sat</string>
     <!-- menu -->

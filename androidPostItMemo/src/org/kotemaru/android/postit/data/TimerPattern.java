@@ -249,7 +249,7 @@ public class TimerPattern {
 		cal.set(Calendar.HOUR_OF_DAY, mHour);
 		cal.set(Calendar.MINUTE, mMinute);
 		cal.set(Calendar.SECOND, 0);
-		Log.d("DEBUG", "Set timer:moto=" + cal.getTime());
+		// Log.d("DEBUG", "Set timer:moto=" + cal.getTime());
 
 		if (mYear != 0 && cal.getTimeInMillis() < currentTime) return cal;
 
@@ -261,8 +261,9 @@ public class TimerPattern {
 					cal.add(Calendar.DATE, 7);
 				}
 			} else {
-				while (cal.getTimeInMillis() < currentTime)
+				while (cal.getTimeInMillis() < currentTime) {
 					cal.add(Calendar.DATE, 7);
+				}
 			}
 		} else {
 			if (mDate != 0 && cal.getTimeInMillis() < currentTime) {

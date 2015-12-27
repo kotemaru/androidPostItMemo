@@ -3,6 +3,7 @@ package org.kotemaru.android.postit.dialog;
 
 import org.kotemaru.android.postit.R;
 import org.kotemaru.android.postit.data.TimerPattern;
+import org.kotemaru.android.postit.layout.DatetimePickerDialogViews;
 import org.kotemaru.android.postit.widget.DatePicker;
 import org.kotemaru.android.postit.widget.TimePicker;
 
@@ -46,18 +47,17 @@ public class DatetimePickerDialogFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Bundle args = getArguments();
 		View view = getActivity().getLayoutInflater().inflate(R.layout.datetime_picker_dialog, null);
-		final DatePicker datePicker = (DatePicker) view.findViewById(R.id.date_picker);
-		final TimePicker timePicker = (TimePicker) view.findViewById(R.id.time_picker);
+		final DatetimePickerDialogViews views = new DatetimePickerDialogViews(view);
 		TimerPattern pattern = TimerPattern.create(args.getString(KEY_TIMER_PATTERN));
-		datePicker.setValue(pattern);
-		timePicker.setValue(pattern);
+		views.mDatePicker.setValue(pattern);
+		views.mTimePicker.setValue(pattern);
 
 		final DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				TimerPattern pattern = new TimerPattern();
-				datePicker.assignTimerPattern(pattern);
-				timePicker.assignTimerPattern(pattern);
+				views.mDatePicker.assignTimerPattern(pattern);
+				views.mTimePicker.assignTimerPattern(pattern);
 				if (pattern.hasData() && !pattern.isValid()) {
 					ErrorDialogFragment.show(getActivity(), getString(R.string.dialog_timer_error));
 				} else {
@@ -76,8 +76,8 @@ public class DatetimePickerDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				TimerPattern pattern = new TimerPattern();
-				datePicker.setValue(pattern);
-				timePicker.setValue(pattern);
+				views.mDatePicker.setValue(pattern);
+				views.mTimePicker.setValue(pattern);
 			}
 		};
 
@@ -96,6 +96,7 @@ public class DatetimePickerDialogFragment extends DialogFragment {
 		// Note: 何かのバグでここで設定しないと BUTTON_NEUTRAL が反応しないので。
 		AlertDialog dialog = (AlertDialog) getDialog();
 		if (dialog == null) return;
+
 		final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.date_picker);
 		final TimePicker timePicker = (TimePicker) dialog.findViewById(R.id.time_picker);
 		Button neutralButton = dialog.getButton(Dialog.BUTTON_NEUTRAL);

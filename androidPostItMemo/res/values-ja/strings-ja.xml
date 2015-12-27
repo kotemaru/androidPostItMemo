@@ -32,6 +32,7 @@
     <!-- dialog -->
     <string name="dialog_timer_title">タイマー</string>
     <string name="dialog_timer_error">日付設定が無効です。\n日付が特定できません。\n日または曜日を指定して下さい。</string>
+    <string name="dialog_repeatable">繰り返す</string>
     <!-- timer pattern -->
     <string name="array_of_week">*,日,月,火,水,木,金,土</string>
     <!-- menu -->

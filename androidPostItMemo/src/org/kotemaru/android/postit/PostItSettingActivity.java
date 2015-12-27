@@ -7,6 +7,7 @@ import org.kotemaru.android.postit.data.TimerPattern;
 import org.kotemaru.android.postit.data.PostItData;
 import org.kotemaru.android.postit.data.PostItDataProvider;
 import org.kotemaru.android.postit.dialog.DatetimePickerDialogFragment;
+import org.kotemaru.android.postit.layout.PostItSettingActivityViews;
 import org.kotemaru.android.postit.util.IntIntMap;
 import org.kotemaru.android.postit.util.Launcher;
 import org.kotemaru.android.postit.widget.RadioLayout;
@@ -54,12 +55,7 @@ public class PostItSettingActivity extends Activity
 	});
 
 	private PostItData mPostItData;
-	private EditText mMemo;
-	private RadioLayout mShapeRadioGroup;
-	private RadioGroup mFontRadioGroup;
-	private RadioLayout mColorRadioGroup;
-	private TextView mTimerSetting;
-
+	private PostItSettingActivityViews mViews;
 	private TimerPattern mTimerPattern;
 
 	/**
@@ -75,11 +71,7 @@ public class PostItSettingActivity extends Activity
 		long postItId = intent.getLongExtra(Launcher.POST_IT_ID, -1);
 		mPostItData = PostItDataProvider.getPostItData(this, postItId);
 
-		mMemo = (EditText) findViewById(R.id.memo);
-		mShapeRadioGroup = (RadioLayout) findViewById(R.id.shape_radio_group);
-		mFontRadioGroup = (RadioGroup) findViewById(R.id.font_radio_group);
-		mColorRadioGroup = (RadioLayout) findViewById(R.id.color_radio_group);
-		mTimerSetting = (TextView) findViewById(R.id.timer_setting);
+		mViews = new PostItSettingActivityViews(this);
 	}
 
 	/**
@@ -90,10 +82,11 @@ public class PostItSettingActivity extends Activity
 		super.onResume();
 
 		// restore settings.
-		mMemo.setText(mPostItData.getMemo());
-		mShapeRadioGroup.check(sShapeRadioMap.getFirst(mPostItData.getWidth(), mPostItData.getHeight()));
-		mFontRadioGroup.check(sFontRadioMap.getFirst(mPostItData.getFontSize()));
-		mColorRadioGroup.check(sColorRadioMap.getFirst(mPostItData.getColor()));
+		mViews.mMemo.setText(mPostItData.getMemo());
+		mViews.mShapeRadioGroup.check(sShapeRadioMap.getFirst(mPostItData.getWidth(), mPostItData.getHeight()));
+		mViews.mFontRadioGroup.check(sFontRadioMap.getFirst(mPostItData.getFontSize()));
+		mViews.mColorRadioGroup.check(sColorRadioMap.getFirst(mPostItData.getColor()));
+		mViews.mTimerRepeatable.setSelected(mPostItData.isTimerIsRepeat());
 
 		setTimerPattern(TimerPattern.create(mPostItData.getTimerPattern()));
 	}
@@ -104,17 +97,19 @@ public class PostItSettingActivity extends Activity
 	@Override
 	public void onPause() {
 		// save settings.
-		mPostItData.setMemo(mMemo.getText().toString());
+		mPostItData.setMemo(mViews.mMemo.getText().toString());
 
-		int shapeResId = mShapeRadioGroup.getCheckedRadioButtonId();
+		int shapeResId = mViews.mShapeRadioGroup.getCheckedRadioButtonId();
 		mPostItData.setWidth(sShapeRadioMap.getSecond(shapeResId));
 		mPostItData.setHeight(sShapeRadioMap.getThird(shapeResId));
 
-		int fontResId = mFontRadioGroup.getCheckedRadioButtonId();
+		int fontResId = mViews.mFontRadioGroup.getCheckedRadioButtonId();
 		mPostItData.setFontSize(sFontRadioMap.getSecond(fontResId));
 
-		int colorResId = mColorRadioGroup.getCheckedRadioButtonId();
+		int colorResId = mViews.mColorRadioGroup.getCheckedRadioButtonId();
 		mPostItData.setColor(sColorRadioMap.getSecond(colorResId));
+
+		mPostItData.setTimerIsRepeat(mViews.mTimerRepeatable.isSelected());
 
 		if (mTimerPattern.isValid()) {
 			// タイマーの設定。非表示にして発火時刻を設定する。
@@ -147,12 +142,17 @@ public class PostItSettingActivity extends Activity
 	public void setTimerPattern(TimerPattern pattern) {
 		mTimerPattern = pattern;
 		if (mTimerPattern.isValid()) {
-			mTimerSetting.setText(mTimerPattern.toLocaleString(this));
+			mViews.mTimerSetting.setText(mTimerPattern.toLocaleString(this));
 			if (BuildConfig.DEBUG) {
 				Log.d(TAG, "Set timer:" + mTimerPattern.toFormalString() + ":" + mTimerPattern.getNextDate().getTime());
 			}
+			mViews.mTimerIcon.setImageResource(R.drawable.ic_clock_white);
+			mViews.mTimerRepeatable.setVisibility(View.VISIBLE);
 		} else {
-			mTimerSetting.setText(R.string.timer_no_setting);
+			mViews.mTimerSetting.setText(R.string.timer_no_setting);
+			mViews.mTimerIcon.setImageResource(R.drawable.ic_clock_gray);
+			mViews.mTimerRepeatable.setSelected(false);
+			mViews.mTimerRepeatable.setVisibility(View.GONE);
 		}
 	}
 }

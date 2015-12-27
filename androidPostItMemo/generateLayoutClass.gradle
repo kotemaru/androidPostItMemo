@@ -94,6 +94,7 @@ class GenerateLayoutClassPlugin implements Plugin<Project> {
         out.println("package ${layoutPackage};");
         out.println("import ${appPackage}.R;");
         out.println("import android.view.*;");
+        out.println("import android.webkit.WebView;");
         out.println("import android.widget.*;");
         out.println("public class ${className} {");
 

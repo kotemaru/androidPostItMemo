@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: './generateLayoutClass.gradle'
 
 android {
     compileSdkVersion 21
@@ -20,7 +21,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
+            java.srcDirs = ['src' , 'build/generated/layout/src/main/java']
             resources.srcDirs = ['src']
             aidl.srcDirs = ['src']
             renderscript.srcDirs = ['src']
@@ -33,4 +34,5 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:21.0.3'
+    compile 'de.timroes.android:EnhancedListView:0.3.4'
 }

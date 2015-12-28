@@ -18,13 +18,25 @@
     <string name="dialog_init_cancel">Cancel</string>
     <!-- post it data settings -->
     <string name="edit_memo">Edit memo</string>
+    <string name="alarm_list">Alarm list</string>
     <string name="memo">Memo:</string>
     <string name="shape">Shape:</string>
     <string name="font">Font size:</string>
     <string name="color">Color:</string>
+    <string name="timer">Timer:</string>
     <string name="font_small">Small</string>
     <string name="font_middle">Middle</string>
     <string name="font_lage">Lage</string>
     <string name="font_huge">Huge</string>
+    <string name="timer_no_setting">No setting.</string>
+    <!-- dialog -->
+    <string name="dialog_timer_title">Timer</string>
+    <string name="dialog_timer_error">The date settings is invalid.\n It can not be determined date.\n
+Please specify the day or day-of-week.</string>
+    <string name="dialog_repeatable">Repeatable</string>
+    <!-- timer pattern -->
+    <string name="array_of_week">***,Sun,Mon,Tue,Wed,Thu,Fri,Sat</string>
+    <!-- menu -->
+    <string name="action_about">about</string>
 
 </resources>

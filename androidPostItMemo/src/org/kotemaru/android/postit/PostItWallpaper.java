@@ -81,9 +81,11 @@ public class PostItWallpaper extends WallpaperService {
 			mSettings.load();
 			update();
 		} else if (Launcher.ACTION_CHANGE_DATA.equals(action)) {
-			mUiHandler.postDelayed(new Runnable(){
+			mUiHandler.postDelayed(new Runnable() {
 				@Override
-				public void run() {update();}
+				public void run() {
+					update();
+				}
 			}, 1000); // TODO: タイミング依存でバグる。確実にPostitViewの描画後にupdateしたい。
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -245,7 +247,7 @@ public class PostItWallpaper extends WallpaperService {
 			Canvas canvas = null;
 			try {
 				canvas = holder.lockCanvas();
-				//Log.d(TAG,"drawFrame:"+canvas);
+				// Log.d(TAG,"drawFrame:"+canvas);
 				if (canvas != null) {
 					// 初期化
 					canvas.drawColor(0, Mode.CLEAR);
@@ -259,34 +261,33 @@ public class PostItWallpaper extends WallpaperService {
 					}
 					// 付箋の描画。半透明。
 					canvas.saveLayerAlpha(0, 0, canvas.getWidth(), canvas.getHeight(), ALPHA, Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
-					//if (!mIsRaisePostIt) { // 常に背景にも表示
-						List<PostItView> list = mPostItViewManager.getPostItViewList();
-						for (PostItView view : list) {
-							drawPostItView(canvas, view);
-						}
-					//}
+					// if (!mIsRaisePostIt) { // 常に背景にも表示
+					List<PostItView> list = mPostItViewManager.getPostItViewList();
+					for (PostItView view : list) {
+						drawPostItView(canvas, view);
+					}
+					// }
 					if (isPreview()) drawPreview(canvas);
 				}
 			} finally {
 				if (canvas != null) holder.unlockCanvasAndPost(canvas);
 			}
 		}
-		
+
 		private void drawPreview(Canvas canvas) {
 			int save = canvas.save();
-			float x = canvas.getWidth()/2;
-			float y = canvas.getHeight()/2;
+			float x = canvas.getWidth() / 2;
+			float y = canvas.getHeight() / 2;
 			mPaint.setTextAlign(Align.CENTER);
 			mPaint.setColor(0x88888888);
-			mPaint.setTextSize(canvas.getWidth()/7);
+			mPaint.setTextSize(canvas.getWidth() / 7);
 			canvas.drawText("Preview", x, y, mPaint);
-			
-			mPaint.setTextSize(canvas.getWidth()/15);
+
+			mPaint.setTextSize(canvas.getWidth() / 15);
 			y = canvas.getHeight() - Util.dp2px(getBaseContext(), 80);
 			canvas.drawText("↓Click this", x, y, mPaint);
 			canvas.restoreToCount(save);
 		}
-		
 
 		/**
 		 * 壁紙へ付箋を描画する。
@@ -346,7 +347,7 @@ public class PostItWallpaper extends WallpaperService {
 				Bitmap cropBitmap = Bitmap.createBitmap(srcBitmap, x, y, w, h);
 				mBackground = Bitmap.createScaledBitmap(cropBitmap, size.x, size.y, true);
 				cropBitmap.recycle();
-				srcBitmap.recycle();
+				// srcBitmap.recycle();
 			} catch (Exception e) {
 				Log.e(TAG, "setBackgroundUri:" + mBackgroundUri, e);
 			}

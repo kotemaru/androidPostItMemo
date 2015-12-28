@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 
 /**
  * 付箋データDB。
@@ -35,23 +36,24 @@ public class PostItDataProvider extends ContentProvider {
 		public String name();
 		public String type();
 	}
-	
+
 	/**
 	 * テーブル定義。typeはSQL型。
 	 */
 	public enum POST_IT_COLS implements Column {
-		_ID("integer primary key autoincrement"),
-		ENABLED("integer"), // 0=false, 1=true
-		COLOR("integer"), // PostItColor class
-		POS_X("integer"), // px
-		POS_Y("integer"), // px
-		WIDTH("integer"), // dp
-		HEIGHT("integer"), // dp
-		FONT_SIZE("integer"), // sp
-		TIMER_IS_REPEATE("integer"),
-		TIMER_PATTERN("text"),
-		TIMER("integer"),
-		MEMO("text"), ;
+		_ID("integer primary key autoincrement"),  //
+		ENABLED("integer"),       // 0=false, 1=true
+		COLOR("integer"),       // PostItColor class
+		POS_X("integer"),       // px
+		POS_Y("integer"),       // px
+		WIDTH("integer"),       // dp
+		HEIGHT("integer"),       // dp
+		FONT_SIZE("integer"),       // sp
+		TIMER_IS_REPEATE("integer"),  //
+		TIMER_PATTERN("text"),   //
+		TIMER("integer"),   //
+		MEMO("text"), //
+		;
 
 		private String mType;
 		private String mWhere;
@@ -129,7 +131,7 @@ public class PostItDataProvider extends ContentProvider {
 		getContext().getContentResolver().notifyChange(uri, null);
 		return Uri.parse(CONTENT_URI_BASE + '/' + MAIN_TABLE + '/' + id);
 	}
-	
+
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
@@ -185,8 +187,10 @@ public class PostItDataProvider extends ContentProvider {
 				POST_IT_COLS.WIDTH.getInt(cursor),
 				POST_IT_COLS.HEIGHT.getInt(cursor),
 				POST_IT_COLS.FONT_SIZE.getInt(cursor),
-				POST_IT_COLS.MEMO.getString(cursor)
-				);
+				POST_IT_COLS.TIMER_IS_REPEATE.getInt(cursor),
+				POST_IT_COLS.TIMER_PATTERN.getString(cursor),
+				POST_IT_COLS.TIMER.getLong(cursor),
+				POST_IT_COLS.MEMO.getString(cursor));
 		return data;
 	}
 	/**
@@ -205,6 +209,9 @@ public class PostItDataProvider extends ContentProvider {
 		POST_IT_COLS.WIDTH.put(values, data.getWidth());
 		POST_IT_COLS.HEIGHT.put(values, data.getHeight());
 		POST_IT_COLS.FONT_SIZE.put(values, data.getFontSize());
+		POST_IT_COLS.TIMER_IS_REPEATE.put(values, data.getTimerIsRepeat());
+		POST_IT_COLS.TIMER_PATTERN.put(values, data.getTimerPattern());
+		POST_IT_COLS.TIMER.put(values, data.getTimer());
 		POST_IT_COLS.MEMO.put(values, data.getMemo());
 		return values;
 	}
@@ -247,15 +254,23 @@ public class PostItDataProvider extends ContentProvider {
 	/**
 	 * すべての付箋データをマップで取得する。
 	 * @param context
+	 * @param curTime
 	 * @return 付箋IDをキーとする付箋データのマップ。nullは無い。
 	 */
-	public static LongSparseArray<PostItData> getPostItDataMap(Context context) {
+	public static LongSparseArray<PostItData> getPostItDataMap(Context context, long curTime) {
 		LongSparseArray<PostItData> map = new LongSparseArray<PostItData>();
-		Cursor cursor = context.getContentResolver().query(PostItDataProvider.CONTENT_URI, null, null, null, null);
+		ContentResolver content = context.getContentResolver();
+		Cursor cursor = content.query(PostItDataProvider.CONTENT_URI, null, null, null, null);
 		try {
+			ContentValues values = new ContentValues();
 			while (cursor.moveToNext()) {
 				PostItData data = PostItDataProvider.toPostItData(cursor);
 				map.put(data.getId(), data);
+				if (curTime > 0 && !data.isEnabled()
+						&& data.getTimerPattern() != null && curTime > data.getTimer()) {
+					data.setEnabled(true);
+					content.insert(CONTENT_URI, fromPostItData(values, data));
+				}
 			}
 		} finally {
 			cursor.close();
@@ -311,4 +326,28 @@ public class PostItDataProvider extends ContentProvider {
 				new String[] { Long.toString(data.getId()) });
 	}
 
+	private static final String[] WHERE_ENABLED_ARGS = new String[] { "0" };
+
+	/**
+	 * タイマーの設定されている付箋で現在時刻を過ぎたものを有効にする。
+	 * @param context
+	 * @param curTime 現在時刻
+	 */
+	public static void updateTimer(Context context, long curTime) {
+		ContentResolver content = context.getContentResolver();
+		Cursor cursor = content.query(CONTENT_URI,
+				null, POST_IT_COLS.ENABLED.where(), WHERE_ENABLED_ARGS, null);
+		try {
+			ContentValues values = new ContentValues();
+			while (cursor.moveToNext()) {
+				PostItData data = PostItDataProvider.toPostItData(cursor);
+				if (!data.isEnabled() && data.getTimerPattern() != null && curTime > data.getTimer()) {
+					data.setEnabled(true);
+					content.insert(CONTENT_URI, fromPostItData(values, data));
+				}
+			}
+		} finally {
+			cursor.close();
+		}
+	}
 }

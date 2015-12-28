@@ -17,6 +17,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,7 +32,7 @@ import android.widget.Button;
  */
 public class SettingActivity extends Activity {
 	public static final String TAG = SettingActivity.class.getSimpleName();
-	
+
 	private Settings mSettings;
 	private WallpaperManager mWallpaperManager;
 	private Button mChoosePictueDay;
@@ -100,7 +102,7 @@ public class SettingActivity extends Activity {
 	 */
 	private boolean hasPostItWallpaper() {
 		WallpaperInfo winfo = mWallpaperManager.getWallpaperInfo();
-		Log.i(TAG,"Current wallpaper="+winfo);
+		Log.i(TAG, "Current wallpaper=" + winfo);
 		if (winfo == null) return false;
 		return PostItWallpaper.class.getCanonicalName().equals(winfo.getServiceName());
 	}
@@ -164,6 +166,28 @@ public class SettingActivity extends Activity {
 		alertDialogBuilder.setCancelable(true);
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.action_about:
+			intent = new Intent(this, WebViewActivity.class);
+			intent.setData(Uri.parse("file:///android_asset/about.html"));
+			startActivity(intent);
+			return true;
+		default:
+			break;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 }

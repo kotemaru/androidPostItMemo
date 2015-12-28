@@ -40,7 +40,7 @@ public class RadioItem extends FrameLayout {
 			typedArray.recycle();
 		}
 	}
-	
+
 	@Override
 	public void onAttachedToWindow() {
 		setOnClickListener(mOnClickListener);
@@ -50,7 +50,7 @@ public class RadioItem extends FrameLayout {
 			mRadioButton.setChecked(isSelected());
 		}
 	}
-	
+
 	/**
 	 * 子要素の標準Radioボタン検索。ネストはしない。
 	 * @return 標準Radioボタン。なければnull。
@@ -82,7 +82,7 @@ public class RadioItem extends FrameLayout {
 		if (group == null) return;
 		group.onSelect(this);
 	}
-	
+
 	/**
 	 * 自分の所属するグループの取得。
 	 * @return
@@ -97,7 +97,7 @@ public class RadioItem extends FrameLayout {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 子要素の標準Radioボタンがあれば選択状態を変更する。
 	 * @param b

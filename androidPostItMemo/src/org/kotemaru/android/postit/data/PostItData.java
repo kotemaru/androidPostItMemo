@@ -2,7 +2,6 @@ package org.kotemaru.android.postit.data;
 
 import org.kotemaru.android.postit.PostItConst.PostItShape;
 
-
 /**
  * 付箋データBean。
  * @author kotemaru.org
@@ -16,16 +15,20 @@ public class PostItData {
 	private int width; // dp
 	private int height; // dp
 	private int fontSize; // sp
+	private int timerIsRepeat;
+	private String timerPattern;
+	private long timer;
 	private String memo;
 
 	public PostItData() {
 	}
 
 	public PostItData(long id, int color, int posX, int posY) {
-		this(id, 1, color, posX, posY, PostItShape.W_LONG, PostItShape.H_SMALL, 12, "");
+		this(id, 1, color, posX, posY, PostItShape.W_LONG, PostItShape.H_SMALL, 12, 0, null, 0, "");
 	}
 
-	public PostItData(long id, int enabled, int color, int posX, int posY, int width, int height, int fontSize, String memo) {
+	public PostItData(long id, int enabled, int color, int posX, int posY, int width, int height,
+			int fontSize, int timerIsRepeat, String timerPattern, long timer, String memo) {
 		this.id = id;
 		this.enabled = enabled;
 		this.color = color;
@@ -34,6 +37,9 @@ public class PostItData {
 		this.width = width;
 		this.height = height;
 		this.fontSize = fontSize;
+		this.timerIsRepeat = timerIsRepeat;
+		this.timerPattern = timerPattern;
+		this.timer = timer;
 		this.memo = memo;
 	}
 
@@ -102,4 +108,31 @@ public class PostItData {
 		this.fontSize = fontSize;
 	}
 
+	public int getTimerIsRepeat() {
+		return timerIsRepeat;
+	}
+
+	public boolean isTimerIsRepeat() {
+		return timerIsRepeat != 0;
+	}
+
+	public void setTimerIsRepeat(boolean timerIsRepeat) {
+		this.timerIsRepeat = timerIsRepeat ? 1 : 0;
+	}
+
+	public String getTimerPattern() {
+		return timerPattern;
+	}
+
+	public void setTimerPattern(String timerPattern) {
+		this.timerPattern = timerPattern;
+	}
+
+	public long getTimer() {
+		return timer;
+	}
+
+	public void setTimer(long timer) {
+		this.timer = timer;
+	}
 }

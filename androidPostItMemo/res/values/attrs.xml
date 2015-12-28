@@ -8,4 +8,9 @@
         <attr name="value_bool" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="ToggleButton">
+        <attr name="label" format="string" />
+        <attr name="icon" format="reference" />
+        <attr name="alpha" format="float" />
+    </declare-styleable>
 </resources>

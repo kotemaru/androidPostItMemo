@@ -53,7 +53,8 @@ public class PostItViewManager {
 	 */
 	public void show(boolean isShow) {
 		for (PostItView postItView : mPostItViewList) {
-			postItView.setVisibility(isShow ? View.VISIBLE : View.GONE);
+			boolean isShowOne = isShow && postItView.getPostItData().isEnabled();
+			postItView.setVisibility(isShowOne ? View.VISIBLE : View.GONE);
 		}
 	}
 
@@ -83,7 +84,8 @@ public class PostItViewManager {
 	 * <li>付箋の作成、削除にも対応する。
 	 */
 	public void syncPostItDataProvider() {
-		LongSparseArray<PostItData> providerAllDataMap = PostItDataProvider.getPostItDataMap(mPostItWallpaper);
+		LongSparseArray<PostItData> providerAllDataMap = PostItDataProvider.getPostItDataMap(mPostItWallpaper,
+				System.currentTimeMillis());
 		Iterator<PostItView> ite = mPostItViewList.iterator();
 		// 既存付箋Viewの更新と削除
 		while (ite.hasNext()) {

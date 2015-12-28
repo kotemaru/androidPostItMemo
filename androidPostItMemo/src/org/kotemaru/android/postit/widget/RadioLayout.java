@@ -10,7 +10,10 @@ import android.widget.LinearLayout;
  * <li>子要素に RadioItem を持つ。
  * <li>RadioItem は FrameLayout を継承するので子要素に任意Viewを配置できる。
  * <li>RadioItem の background 属性に適当な selector を設定する必要がある。
- * <li>layout.xmlサンプル<pre>{@code
+ * <li>layout.xmlサンプル
+ * 
+ * <pre>
+ * {@code
  *   <org.kotemaru.android.postit.widget.RadioLayout
         android:id="@+id/shape_radio_group"
         android:layout_width="match_parent"
@@ -34,14 +37,20 @@ import android.widget.LinearLayout;
                 android:src="@drawable/post_it_blue" />
         </org.kotemaru.android.postit.widget.RadioItem>
       </org.kotemaru.android.postit.widget.RadioLayout>
-   }</pre>
+   }
+ * </pre>
  * 
- * <li>radio_selector.xmlサンプル<pre>{@code
+ * <li>radio_selector.xmlサンプル
+ * 
+ * <pre>
+ * {@code
  * <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/radio_on_bg" android:state_selected="true" android:state_pressed="false"/>
     <item android:drawable="@drawable/radio_off_bg" android:state_selected="false" android:state_pressed="false"/>
    </selector>
-}</pre>
+}
+ * </pre>
+ * 
  * @author kotemaru.org
  */
 public class RadioLayout extends LinearLayout {
